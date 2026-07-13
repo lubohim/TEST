@@ -1,0 +1,126 @@
+TEST
+
+{
+  "version": "1.0.0",
+  "kind": "Policy",
+  "data": {
+    "version": "019d2d91-d1bc-78ee-8105-81188b58ca4b",
+    "type": "data_protection",
+    "name": "[SJ] Google Drive 비인가 차단",
+    "severity": 3,
+    "query": {
+      "rules": [
+        {
+          "conditions": [
+            {
+              "field_name": "cloud_app",
+              "operator": "is",
+              "selector": "match_any",
+              "values": [
+                {
+                  "value": "gdrive"
+                }
+              ],
+              "case_sensitive": false,
+              "match_path_delimiters": false,
+              "negated": false
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "field_name": "url",
+              "operator": "contains",
+              "selector": "match_any",
+              "values": [
+                {
+                  "value": "drive.google.com"
+                }
+              ],
+              "case_sensitive": false,
+              "match_path_delimiters": false,
+              "negated": false
+            }
+          ]
+        }
+      ],
+      "cel": "((((node.event_type != 'dar_scan') && ((node.cloud_app.existsEqualsCI(\"gdrive\") || node.cloud_provider.existsEqualsCI(\"gdrive\")) || (node.url.existsContainsCI(\"drive.google.com\") || node.browser_page_url.existsContainsCI(\"drive.google.com\"))))) && (!(node.cloud_app_account.existsContainsCI(\"sjpark@innovis.co.kr\"))))",
+      "list_references": null
+    },
+    "user_query": {
+      "rules": [
+        {
+          "conditions": [
+            {
+              "field_name": "user.risk_groups.id",
+              "operator": "is",
+              "selector": "match_any",
+              "values": [
+                {
+                  "value": "019a75b6-44c7-78f1-a1c2-1b5a3afbc4c4"
+                }
+              ],
+              "case_sensitive": false,
+              "match_path_delimiters": false,
+              "negated": false
+            }
+          ]
+        }
+      ],
+      "cel": "user.risk_groups.exists(x, x.id.existsEqualsCI(\"019a75b6-44c7-78f1-a1c2-1b5a3afbc4c4\"))",
+      "list_references": null
+    },
+    "rule": {
+      "status": "risky",
+      "create_incident": true,
+      "record_screenshots": true,
+      "inspect_content": false,
+      "capture_content": true,
+      "notify_enabled": false,
+      "notify_status": "",
+      "notify_email": "",
+      "show_title": true,
+      "show_logo": true,
+      "require_justification": false,
+      "should_ack_warning": false,
+      "allow_request_review": false,
+      "override_enabled": false,
+      "hide_textbox": true,
+      "scan_message_links": false,
+      "swap_buttons": false,
+      "message_is_markdown": false,
+      "warning_dialog": {
+        "title": "Warning: violation of INNOVIS System security policy",
+        "explanation": "The action you just performed violates INNOVIS System security policies",
+        "placeholder": "Optional: Please, provide a justification for your action",
+        "check_text": "I acknowledge that I have read and understood this message",
+        "review_check_text": "I received this by mistake, please review and update this policy",
+        "submit_label": "I UNDERSTAND",
+        "allow_label": "ALLOW"
+      },
+      "blocking_dialog": {
+        "title": "{{category}}",
+        "explanation": "Action : {{action}}\nPolicy : {{category}}\nDataset : {{dataset}}\nSRC : {{source}}\nDST : {{destination}}",
+        "placeholder": " Please, provide a justification for your action",
+        "check_text": "I acknowledge that I have read and understood this message",
+        "review_check_text": "I received this by mistake, please review and update this policy",
+        "submit_label": "I UNDERSTAND",
+        "allow_label": "ALLOW"
+      },
+      "blocking_action": null,
+      "incident_action": "block",
+      "open_url": "",
+      "popup_throttling": 0
+    },
+    "dataset_ids": [],
+    "exclude_origin": false,
+    "created_at": "2026-03-27T04:23:23.867034444Z",
+    "created_by": "bquICKSHfneId4keIb9PqeRPBSg2",
+    "last_modified": "2026-03-27T04:33:44.361984611Z",
+    "last_modified_by": "bquICKSHfneId4keIb9PqeRPBSg2",
+    "last_successful_backfill": "0001-01-01T00:00:00Z",
+    "backfill_window": "0001-01-01T00:00:00Z",
+    "selection_type": "dataset"
+  }
+}
